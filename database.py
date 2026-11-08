@@ -95,6 +95,38 @@ def get_sightings(location=None, start=None, end=None):
     return [dict(row) for row in results]
 
 
+def get_sightings_by_location():
+    query = """
+        SELECT location, COUNT(*) AS count
+        FROM sightings
+        GROUP BY location COLLATE NOCASE
+        ORDER BY count DESC, location
+    """
+
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        conn.row_factory = sqlite3.Row
+        results = conn.execute(query).fetchall()
+
+    return [dict(row) for row in results]
+
+
+def get_monthly_trends():
+    query = """
+        SELECT substr(date, 1, 7) AS month,
+               COUNT(*) AS count
+        FROM sightings
+        GROUP BY substr(date, 1, 7)
+        ORDER BY month ASC
+    """
+
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        conn.row_factory = sqlite3.Row
+        results = conn.execute(query).fetchall()
+
+    return [dict(row) for row in results]
+
+
+
 if __name__ == "__main__":
     from service import fetch_sightings, clean_sightings
 

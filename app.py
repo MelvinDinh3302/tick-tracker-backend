@@ -8,7 +8,9 @@ from database import (
     init_db,
     count_sightings,
     save_sightings,
-    get_sightings
+    get_sightings,
+    get_sightings_by_location,
+    get_monthly_trends
 )
 
 app = Flask(__name__)
@@ -73,6 +75,26 @@ def sightings():
     results = get_sightings(location, start, end)
 
     return jsonify(results)
+
+@app.route("/api/stats/locations")
+def stats_by_location():
+    results = get_sightings_by_location()
+
+    return jsonify({
+        "group_by": "city",
+        "data": results
+    })
+
+
+@app.route("/api/stats/trends")
+def stats_trends():
+    results = get_monthly_trends()
+
+    return jsonify({
+        "interval": "monthly",
+        "data": results
+    })
+
 
 
 if __name__ == "__main__":
