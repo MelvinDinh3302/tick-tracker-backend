@@ -1,14 +1,14 @@
 # Tick Tracker Backend
 
-A Flask-based REST API for retrieving, cleaning, storing, searching, and reporting UK tick-sighting data from the [Elanco external API](https://dev-task.elancoapps.com/data).
+A Flask-based REST API for retrieving, cleaning, storing, searching, and reporting UK tick-sighting data from the [Elanco external API](https://dev-task.elancoapps.com/).
 
-**Elanco Software Engineering Technical Assessment — Backend**  
-**Author:** Thang (Melvin) Dinh
+**Elanco Software Engineering Technical Assessment - Backend**  
+**Author:** Vu Trong Thang Dinh (Melvin Dinh)
 
 ## Features
 
 - Fetch sightings from Elanco's read-only external API.
-- Validate required fields and timestamps; discard incomplete or malformed records.
+- Validate required fields and timestamps, discard incomplete or malformed records.
 - Remove duplicate sightings by ID and persist valid records in SQLite.
 - Filter sightings by city and inclusive date range.
 - Report sightings per city and monthly sighting counts.
@@ -23,11 +23,11 @@ The walkthrough demonstrates the application setup, backend architecture, search
 
 ## Technology stack
 
-- **Python** — Backend implementation
-- **Flask** — HTTP and JSON endpoints
-- **Requests** — External API client
-- **SQLite (`sqlite3`)** — Local relational data storage
-- **pytest** — Automated testing
+- **Python** - Backend implementation
+- **Flask** - HTTP and JSON endpoints
+- **Requests** - External API client
+- **SQLite (`sqlite3`)** - Local relational data storage
+- **pytest** - Automated testing
 
 ## Architecture
 
@@ -35,13 +35,13 @@ The walkthrough demonstrates the application setup, backend architecture, search
 Elanco external API
          |
          v
-service.py  (fetch, validate, clean, deduplicate)
+service.py (fetch, validate, clean, deduplicate)
          |
          v
 database.py (SQLite persistence, filtering, aggregates)
          |
          v
-app.py      (Flask REST endpoints)
+app.py (Flask REST endpoints)
          |
          v
 JSON responses
@@ -59,7 +59,6 @@ On startup, the application creates the SQLite database if necessary. **If the d
 ### Requirements
 
 - Python 3
-- Internet access for the initial data import
 
 ### Installation
 
@@ -101,8 +100,6 @@ python app.py
 The local API will be available at **http://127.0.0.1:5000**.
 
 **Important:** Use `python app.py` rather than `flask --app app run`, since the current application's data initialization is invoked in the script entry point.
-
-The development server runs with Flask debug mode enabled. It is intended for local assessment and demonstration, not production deployment.
 
 ## API endpoints
 
@@ -151,14 +148,6 @@ GET /api/stats/trends
 
 Returns an object with `interval: "monthly"` and a `data` array containing `YYYY-MM` month labels and counts, ordered chronologically.
 
-## Data quality and reliability
-
-- **Missing or empty data:** Records must contain nonempty string values for `id`, `date`, `location`, `species`, and `latinName`.
-- **Invalid dates:** Dates must be parseable as ISO-format timestamps.
-- **Duplicates:** Repeated IDs are removed during cleaning; the SQLite primary key and `INSERT OR IGNORE` prevent duplicate inserts across imports.
-- **External API failures:** Fetch operations use a 15-second timeout and raise HTTP errors. During startup, request or data-format failures are logged without crashing Flask.
-- **SQL safety:** Filtering uses parameterized SQL rather than interpolating user input into queries.
-
 ## Testing
 
 The automated tests use Flask's test client, mocked external API responses, and temporary SQLite databases, so they do not modify the application's actual `sightings.db` file or require the live API.
@@ -185,5 +174,5 @@ python -m pytest tests/test_api.py -v
 - **Monthly trends:** The implemented trend endpoint groups sightings by month; weekly grouping is a possible extension.
 - **Date assumptions:** Search and reporting SQL assume consistently formatted timestamps beginning with `YYYY-MM-DD`, as in the supplied dataset.
 - **Scale:** The sightings endpoint currently returns all matching records. Pagination and incremental synchronization would improve support for much larger datasets.
-- **Health checks:** `/health` reports application availability; it does not independently verify upstream API or database readiness.
+- **Health checks:** `/health` reports application availability. It does not independently verify upstream API or database readiness.
 - **Future extensions:** Data refresh controls, pagination, regional mapping, additional trend intervals, and optional analytical/ML insights.
