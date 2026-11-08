@@ -18,7 +18,7 @@ A Flask-based REST API for retrieving, cleaning, storing, searching, and reporti
 
 ## Video walkthrough
 
-**[Watch the project walkthrough](VIDEO_URL)**
+**[Watch the project walkthrough](https://youtu.be/E3YM4ea1Okg)**
 
 The walkthrough demonstrates the application setup, backend architecture, data cleaning and storage, search and reporting endpoints, optional anomaly detection, and automated tests.
 
