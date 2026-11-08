@@ -65,6 +65,36 @@ def count_sightings():
 
     return result[0]
 
+
+def get_sightings(location=None, start=None, end=None):
+    query = """
+        SELECT id, date, location, species, latinName
+        FROM sightings
+        WHERE 1=1
+    """
+    params = []
+
+    if location:
+        query += " AND location = ? COLLATE NOCASE"
+        params.append(location)
+
+    if start:
+        query += " AND substr(date, 1, 10) >= ?"
+        params.append(start)
+
+    if end:
+        query += " AND substr(date, 1, 10) <= ?"
+        params.append(end)
+
+    query += " ORDER BY date DESC"
+
+    with closing(sqlite3.connect(DB_PATH)) as conn:
+        conn.row_factory = sqlite3.Row
+        results = conn.execute(query, params).fetchall()
+
+    return [dict(row) for row in results]
+
+
 if __name__ == "__main__":
     from service import fetch_sightings, clean_sightings
 
