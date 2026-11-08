@@ -42,6 +42,15 @@ def clean_sightings(sightings):
             invalid_count += 1
             continue
 
+        # Validate date
+        try:
+            datetime.fromisoformat(
+                sighting["date"].strip().replace("Z", "+00:00")
+            )
+        except ValueError:
+            invalid_count += 1
+            continue
+
         # Check for duplicate IDs
         sighting_id = sighting["id"].strip()
 
