@@ -12,6 +12,7 @@ from database import (
     get_sightings_by_location,
     get_monthly_trends
 )
+from insights import detect_anomalies
 
 app = Flask(__name__)
 
@@ -94,6 +95,10 @@ def stats_trends():
         "interval": "monthly",
         "data": results
     })
+
+@app.route("/api/insights/anomalies")
+def get_anomalies():
+    return jsonify(detect_anomalies())
 
 
 
